@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %} Home Page {% endblock title %}
+
+{% block content %}
+{% load static %}
+<div class="container-fluid p-5 mb-0">
+
+  <!-- Product Row -->
+  <div class="row d-flex justify-content-center">
+
+    {% for x in products %}
+      <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm hover-shadow" style="transition: transform 0.3s ease;">
+          <!-- Product Link -->
+          <a href="{% url 'view_product' x.id %}" class="text-decoration-none text-dark">
+            <div class="position-relative">
+              <!-- Product Image -->
+              <img src="{{ x.image.url }}" class="card-img-top" alt="{{ x.title }}" style="object-fit: cover; height: 200px; border-radius: 10px;">
+              <!-- Badge for Special Offers (optional) -->
+              {% if x.is_on_sale %}
+                <span class="position-absolute top-0 start-0 badge bg-danger text-white m-2">Sale</span>
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <!-- Product Title -->
+              <h5 class="card-title text-center">{{ x.title }}</h5>
+              <!-- Product Price -->
+              <p class="text-center text-muted">Price: ${{ x.retail_price }}</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center w-100">No products available!</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Cart Count Badge -->
+<span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+   {% block cartCount %} {{ cart_count }} {% endblock cartCount %}
+</span>
+
+{% endblock content %}

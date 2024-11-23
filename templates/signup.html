@@ -1,0 +1,98 @@
+{% extends "authBase.html" %}
+
+{% block title %}Sign Up - Sam Shoes{% endblock title %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock style %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="card shadow-lg p-4 rounded-4" style="max-width: 500px; width: 100%;">
+        <div class="text-center">
+            <img src="{% static 'images/sam_logo.png' %}" alt="Sam Shoes Logo" height="80" class="mb-3">
+            <h3 class="fw-bold text-primary">Create an Account</h3>
+            <p class="text-muted">Sign up to access exclusive features</p>
+        </div>
+        <form action="{% url 'signup' %}" method="post" id="signUpForm" class="mt-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password1" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" id="password1" name="password1" class="form-control" placeholder="Enter your password" required>
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword1">
+                        <i class="bi bi-eye-slash" id="eyeIcon1"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="password2" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <input type="password" id="password2" name="password2" class="form-control" placeholder="Confirm your password" required>
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword2">
+                        <i class="bi bi-eye-slash" id="eyeIcon2"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="text-center text-danger" id="passwordError" style="display: none;">
+                Passwords do not match!
+            </div>
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary py-2">Sign Up</button>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'loginPage' %}" class="text-muted text-decoration-none">Already have an account? <span class="text-primary">Log in</span></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Toggle password visibility for both password fields
+    document.getElementById('togglePassword1').addEventListener('click', function () {
+        const passwordField = document.getElementById('password1');
+        const icon = document.getElementById('eyeIcon1');
+        togglePasswordVisibility(passwordField, icon);
+    });
+
+    document.getElementById('togglePassword2').addEventListener('click', function () {
+        const passwordField = document.getElementById('password2');
+        const icon = document.getElementById('eyeIcon2');
+        togglePasswordVisibility(passwordField, icon);
+    });
+
+    function togglePasswordVisibility(passwordField, icon) {
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        }
+    }
+
+    // Password mismatch validation
+    document.getElementById('signUpForm').addEventListener('submit', function (event) {
+        const password1 = document.getElementById('password1').value;
+        const password2 = document.getElementById('password2').value;
+        const error = document.getElementById('passwordError');
+
+        if (password1 !== password2) {
+            event.preventDefault();
+            error.style.display = 'block';
+        } else {
+            error.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock content %}
